@@ -14,7 +14,6 @@ class Camion(Vehiculo):
     costo_kg_pesado=2
     def __init__(self):
         super().__init__("Automotor",80,30000,30,5,None)
-    
 class Tren(Vehiculo):
     costo_km_largo=15
     costo_km_corto=20

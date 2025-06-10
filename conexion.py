@@ -4,16 +4,16 @@ class Conexion:
     conexiones_registradas = {}
     def __init__(self, origen: Nodo, destino: Nodo, tipo: str, distancia: float):
         Conexion.verificar_conexion(origen, destino)
+        if origen not in Conexion.conexiones_registradas:
+            Conexion.conexiones_registradas[origen] = {}
+        if destino not in Conexion.conexiones_registradas[origen]:
+            Conexion.conexiones_registradas[origen][destino] = {}
+        if tipo in Conexion.conexiones_registradas[origen][destino]:
+            raise ValueError(f"Ya existe una conexión {tipo} entre {origen} y {destino}")
         self.origen = origen
         self.destino = destino
         self.tipo = tipo
         self.distancia = distancia
-        if self.origen not in Conexion.conexiones_registradas:
-            Conexion.conexiones_registradas[self.origen] = {}
-        if self.destino not in Conexion.conexiones_registradas[self.origen]:
-            Conexion.conexiones_registradas[self.origen][self.destino] = {}
-        if self.tipo in Conexion.conexiones_registradas[self.origen][self.destino]:
-            raise ValueError(f"Ya existe una conexión {self.tipo} entre {self.origen} y {self.destino}")
         Conexion.conexiones_registradas[self.origen][self.destino][self.tipo] = self
     @staticmethod
     def verificar_conexion(origen, destino):
@@ -24,19 +24,19 @@ class Conexion:
     def __str__(self):
         return f"Conexión de {self.origen} a {self.destino} de tipo {self.tipo} con distancia {self.distancia} km"
 class Conexion_Tipo_Ferroviaria(Conexion):
-    def __init__(self, origen: Nodo, destino: Nodo, distancia: float, velocidad_maxima: int):
+    def __init__(self, origen: Nodo, destino: Nodo, tipo:str,distancia: float, velocidad_maxima: int):
         super().__init__(origen, destino, "Ferroviaria", distancia)
         self.velocidad_maxima = velocidad_maxima
 class Conexion_Tipo_Automotor(Conexion):
-    def __init__(self, origen: Nodo, destino: Nodo, distancia: float, carga_maxima: int):
+    def __init__(self, origen: Nodo, destino: Nodo, tipo:str, distancia: float, carga_maxima: int):
         super().__init__(origen, destino, "Automotor", distancia)
         self.carga_maxima = carga_maxima
 class Conexion_Tipo_Fluvial(Conexion):
-    def __init__(self, origen: Nodo, destino: Nodo, distancia: float, tasa_de_uso:str):
+    def __init__(self, origen: Nodo, destino: Nodo, tipo:str, distancia: float, tasa_de_uso:str):
         super().__init__(origen, destino, "Fluvial", distancia)
         self.tasa_de_uso = tasa_de_uso
 class Conexion_Tipo_Aerea(Conexion):
-    def __init__(self, origen: Nodo, destino: Nodo, distancia: float,probabilidad:float):
+    def __init__(self, origen: Nodo, destino: Nodo, tipo:str, distancia: float,probabilidad:float):
         super().__init__(origen, destino, "Aerea", distancia)
         self.probabilidad = probabilidad
 def crear_conexiones_desde_csv(archivo_csv: str, nodos: dict[str, Nodo]) -> list[Conexion]:
@@ -59,25 +59,25 @@ def crear_conexiones_desde_csv(archivo_csv: str, nodos: dict[str, Nodo]) -> list
                     velocidad_maxima = 0
                 else:
                     velocidad_maxima = int(row[5])
-                conexion = Conexion_Tipo_Ferroviaria(origen, destino, distancia, velocidad_maxima)
+                conexion = Conexion_Tipo_Ferroviaria(origen, destino, 'Ferroviaria', distancia, velocidad_maxima)
             elif tipo == "automotor":
                 if row[5] == '':
                     carga_maxima = 0
                 else:
                     carga_maxima = int(row[5])
-                conexion = Conexion_Tipo_Automotor(origen, destino, distancia, carga_maxima)
+                conexion = Conexion_Tipo_Automotor(origen, destino,'Automotor', distancia, carga_maxima)
             elif tipo == "fluvial":
                 if row[5] == '':
                     tasa_de_uso = 0
                 else:
                     tasa_de_uso = row[5]
-                conexion = Conexion_Tipo_Fluvial(origen, destino, distancia, tasa_de_uso)
+                conexion = Conexion_Tipo_Fluvial(origen, destino, 'Fluvial',distancia, tasa_de_uso)
             elif tipo == "aerea":  
                 if row[5] == '':
                     probabilidad = 0
                 else:
                     probabilidad = float(row[5])
-                conexion = Conexion_Tipo_Aerea(origen, destino, distancia, probabilidad)
+                conexion = Conexion_Tipo_Aerea(origen, destino, 'Aerea',distancia, probabilidad)
             else:
                 raise ValueError(f"Tipo de conexión desconocido: {tipo}")
             conexiones.append(conexion)

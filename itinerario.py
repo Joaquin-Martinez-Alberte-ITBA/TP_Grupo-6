@@ -1,36 +1,44 @@
-from tramo import Tramo
-
 class Itinerario:
-    def __init__(self, optimizacion):
-        if optimizacion not in {"costo", "tiempo"}:
-            raise ValueError("El método de optimización debe ser 'costo' o 'tiempo'.")
-        self.tramos = []
-        self.optimizacion = optimizacion
+    def __init__(self, id_carga, metodo_optimizacion):
+        self.id_carga = id_carga
+        self.tramos = []  # Lista de diccionarios: [{'origen': Nodo, 'destino': Nodo, 'vehiculo': Vehiculo, 'distancia': float}]
+        self.costo_total = 0
+        self.tiempo_total = 0
+        self.metodo_optimizacion = metodo_optimizacion  # "costo" o "tiempo"
 
-    def agregar_tramo(self, tramo):
-        nodos_visitados = set()
-        for t in self.tramos:
-            nodos_visitados.add(t.origen)
-            nodos_visitados.add(t.destino)
-        if tramo.origen in nodos_visitados or tramo.destino in nodos_visitados:
-            raise ValueError("El itinerario no puede contener loops (ciclos).")
-        self.tramos.append(tramo)
+    def agregar_tramo(self, origen, destino, vehiculo):
+        distancia = vehiculo.distancia  # Asumiendo que esto es la distancia entre origen y destino
+        costo = vehiculo.costo_por_uso
+        tiempo = vehiculo.tiempo
 
-    def costo_total(self):
-        return sum(tramo.costo for tramo in self.tramos)
+        self.tramos.append({
+            "origen": origen,
+            "destino": destino,
+            "vehiculo": vehiculo,
+            "distancia": distancia,
+            "costo": costo,
+            "tiempo": tiempo
+        })
 
-    def tiempo_total(self):
-        return sum(tramo.distancia / tramo.velocidad_utilizada for tramo in self.tramos)
-    
-    def mostrar_itinerario(self):
-        print("Itinerario:")
-        for i, tramo in enumerate(self.tramos, start=1):
-            tiempo = tramo.distancia / tramo.velocidad_utilizada
-            print(f"Tramo {i}: {tramo.origen.nombre} -> {tramo.destino.nombre}")
-            print(f"Vehículo: {tramo.vehiculo.__class__.__name__} ({tramo.modo})")
-            print(f"Distancia: {tramo.distancia} km | Velocidad: {tramo.velocidad_utilizada} km/h")
-            print(f"Tiempo estimado: {tiempo} h | Costo tramo: ${tramo.costo}")
-            print()
-        print(f"Método de optimización: {self.optimizacion}")
-        print(f"Costo total: ${self.costo_total()}")
-        print(f"Tiempo total: {self.tiempo_total()} ")
+        self.costo_total += costo
+        self.tiempo_total += tiempo
+
+    def contiene_loops(self):
+        visitados = set()
+        for tramo in self.tramos:
+            if tramo["origen"] in visitados:
+                return True
+            visitados.add(tramo["origen"])
+        return False
+
+    def resumen(self):
+        print(f"Itinerario para ID Carga: {self.id_carga}")
+        print(f"Optimización: {self.metodo_optimizacion}")
+        for tramo in self.tramos:
+            print(f"{tramo['origen'].nombre_ciudad} -> {tramo['destino'].nombre_ciudad} | "
+                  f"Vehículo: {tramo['vehiculo'].__class__.__name__} | "
+                  f"Distancia: {tramo['distancia']} km | "
+                  f"Tiempo: {tramo['tiempo']} h | "
+                  f"Costo: ${tramo['costo']}")
+        print(f"Costo Total: ${self.costo_total} | Tiempo Total: {self.tiempo_total} hs")
+        

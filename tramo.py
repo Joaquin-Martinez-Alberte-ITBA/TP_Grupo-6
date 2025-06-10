@@ -1,8 +1,17 @@
 from nodo import Nodo, cargar_nodos_desde_csv
 from conexion import crear_conexiones_desde_csv, Conexion
 from Solicitudes import leer_solicitudes_csv
+from vehiculos import Camion, Tren, Avion, Barco
+from capacidad import cantidad_de_vehiculos
+import random
 
-# Diccionario donde se guardarán los tramos por ID de carga
+VELOCIDAD_POR_TIPO = {
+    "Ferroviaria": Tren().velocidad_kmh,
+    "Automotor": Camion().velocidad_kmh,
+    "Aerea": Avion().velocidad_normal,
+    "Fluvial": Barco().velocidad_kmh,
+}
+
 tramos_guardados = {}
 
 def buscar_rutas(origen: Nodo, destino: Nodo, tipo: str):
@@ -21,6 +30,23 @@ def buscar_rutas(origen: Nodo, destino: Nodo, tipo: str):
     camino_encontrado(origen, [origen], 0)
     return rutas
 
+def calcular_tiempo(ruta: list[Nodo], tipo: str):
+    tiempo_horas = 0
+    for origen, destino in zip(ruta, ruta[1:]):
+        conexion = Conexion.conexiones_registradas[origen][destino][tipo]
+        velocidad = VELOCIDAD_POR_TIPO[tipo]
+        if tipo == "Ferroviaria":
+            vmax = getattr(conexion, "velocidad_maxima", 0)
+            if vmax:
+                velocidad = min(velocidad, vmax)
+        elif tipo == "Aerea":
+            prob = getattr(conexion, "probabilidad", 0)
+            if prob and random.random() < prob:
+                velocidad = Avion.velocidad_reducida
+        tiempo_horas += conexion.distancia / velocidad
+    return tiempo_horas * 60
+
+
 def procesar_tramos():
     solicitudes = leer_solicitudes_csv()
     types = ['Ferroviaria', 'Automotor', 'Aerea', 'Fluvial']
@@ -33,11 +59,16 @@ def procesar_tramos():
                 tramos_guardados[id_carga] = {}
             tramos_guardados[id_carga][type] = []
             for ruta, distancia in rutas:
+                cantidad_vehiculos = cantidad_de_vehiculos(ruta,type,peso)
+                tiempo_total = calcular_tiempo(ruta, type)
                 tramos_guardados[id_carga][type].append({
                     "ruta": [nodo.nombre_ciudad for nodo in ruta],
-                    "distancia_total": distancia
+                    "distancia_total": distancia,
+                    "tiempo_total": tiempo_total,
                 })
             print(f"Rutas {type} posibles para {id_carga} ({origen_name} → {destino_name})")
             for ruta, distancia in rutas:
-                print(" -> ".join(nodo.nombre_ciudad for nodo in ruta) + f" | {distancia} km")
-
+                print(
+                    " -> ".join(nodo.nombre_ciudad for nodo in ruta)
+                    + f" | {distancia} km | {round(tiempo_total,0)} min {cantidad_vehiculos} vehiculos necesarios"
+                )
