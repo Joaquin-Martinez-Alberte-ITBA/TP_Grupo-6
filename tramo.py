@@ -4,6 +4,7 @@ from Solicitudes import leer_solicitudes_csv
 from vehiculos import Camion, Tren, Avion, Barco
 from capacidad import cantidad_de_vehiculos
 import random
+import math
 
 VELOCIDAD_POR_TIPO = {
     "Ferroviaria": Tren().velocidad_kmh,
@@ -46,7 +47,6 @@ def calcular_tiempo(ruta: list[Nodo], tipo: str):
         tiempo_horas += conexion.distancia / velocidad
     return tiempo_horas * 60
 
-
 def procesar_tramos():
     solicitudes = leer_solicitudes_csv()
     types = ['Ferroviaria', 'Automotor', 'Aerea', 'Fluvial']
@@ -65,10 +65,12 @@ def procesar_tramos():
                     "ruta": [nodo.nombre_ciudad for nodo in ruta],
                     "distancia_total": distancia,
                     "tiempo_total": tiempo_total,
+                    "peso": peso,
+                    "cantidad_vehiculos": cantidad_vehiculos
                 })
-            print(f"Rutas {type} posibles para {id_carga} ({origen_name} → {destino_name})")
+            print(f"Rutas {type} posibles para {id_carga} ({origen_name} → {destino_name}) {peso} kg: ")
             for ruta, distancia in rutas:
                 print(
                     " -> ".join(nodo.nombre_ciudad for nodo in ruta)
-                    + f" | {distancia} km | {round(tiempo_total,0)} min {cantidad_vehiculos} vehiculos necesarios"
+                    + f" | {math.ceil(distancia)} km | {math.ceil(tiempo_total)} min | {cantidad_vehiculos} vehiculos necesarios"
                 )
