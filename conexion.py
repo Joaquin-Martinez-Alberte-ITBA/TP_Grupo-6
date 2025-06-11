@@ -31,9 +31,9 @@ class Conexion_Tipo_Automotor(Conexion):
     def __init__(self, origen: Nodo, destino: Nodo, tipo:str, distancia: float, carga_maxima: int):
         super().__init__(origen, destino, "Automotor", distancia)
         self.carga_maxima = carga_maxima
-class Conexion_Tipo_Fluvial(Conexion):
+class Conexion_Tipo_Naval(Conexion):
     def __init__(self, origen: Nodo, destino: Nodo, tipo:str, distancia: float, tasa_de_uso:str):
-        super().__init__(origen, destino, "Fluvial", distancia)
+        super().__init__(origen, destino, tipo.title(), distancia)
         self.tasa_de_uso = tasa_de_uso
 class Conexion_Tipo_Aerea(Conexion):
     def __init__(self, origen: Nodo, destino: Nodo, tipo:str, distancia: float,probabilidad:float):
@@ -66,12 +66,12 @@ def crear_conexiones_desde_csv(archivo_csv: str, nodos: dict[str, Nodo]) -> list
                 else:
                     carga_maxima = int(row[5])
                 conexion = Conexion_Tipo_Automotor(origen, destino,'Automotor', distancia, carga_maxima)
-            elif tipo == "fluvial":
+            elif tipo == "fluvial"  or tipo == "maritima":
                 if row[5] == '':
                     tasa_de_uso = 0
                 else:
                     tasa_de_uso = row[5]
-                conexion = Conexion_Tipo_Fluvial(origen, destino, 'Fluvial',distancia, tasa_de_uso)
+                conexion = Conexion_Tipo_Naval(origen, destino,tipo.title(),distancia, tasa_de_uso)
             elif tipo == "aerea":  
                 if row[5] == '':
                     probabilidad = 0
