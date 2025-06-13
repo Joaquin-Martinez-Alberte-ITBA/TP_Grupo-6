@@ -4,6 +4,7 @@ from nodo import Nodo, cargar_nodos_desde_csv
 from conexion import crear_conexiones_desde_csv, Conexion
 from tramo import procesar_tramos, tramos_guardados
 from kpi import obtener_ruta_optima
+from graficos import graficar_itinerario   
 
 def cargar_datos():
     try:
@@ -22,6 +23,7 @@ def procesar_y_mostrar():
     procesar_tramos()
     output = obtener_ruta_optima(tramos_guardados)
     mostrar_output(output)
+    graficar_itinerario(tramos_guardados)    
 
 def mostrar_output(texto):
     output_text.delete("1.0", tk.END)
