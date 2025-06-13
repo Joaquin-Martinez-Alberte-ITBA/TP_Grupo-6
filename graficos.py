@@ -1,9 +1,15 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from tramo import procesar_tramos, tramos_guardados
+from nodo import cargar_nodos_desde_csv, Nodo
+from conexion import crear_conexiones_desde_csv, Conexion
 
-procesar_tramos()  # carga los datos en tramos_guardados
+# Cargar los datos necesarios
+cargar_nodos_desde_csv("nodos.csv")
+crear_conexiones_desde_csv("conexiones.csv", Nodo.nodos_registrados)
+procesar_tramos()  # Esto carga tramos_guardados
 
+# Variables para graficar
 distancias = []
 tiempos = []
 costos = []
@@ -15,7 +21,7 @@ for carga in tramos_guardados.values():
             tiempos.append(tramo["tiempo_total"])
             costos.append(tramo["costo"])
 
-# Calcular acumulados si se desea visualizar la evolución
+# Acumulados para visualizar evolución
 dist_acum = np.cumsum(distancias)
 time_acum = np.cumsum(tiempos)
 cost_acum = np.cumsum(costos)
@@ -35,3 +41,4 @@ plt.ylabel("Costo acumulado ($)")
 plt.title("Costo vs Tiempo")
 
 plt.show()
+

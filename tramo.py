@@ -51,11 +51,12 @@ def calcular_tiempo(ruta: list[Nodo], tipo: str):
 
 def procesar_tramos():
     solicitudes = leer_solicitudes_csv()
-    types = ['Ferroviaria', 'Automotor', 'Aerea', 'Fluvial', 'Maritima']
-    letra_index = 0  # índice global para letras
-
-    for type in types:
-        for id_carga, peso, origen_name, destino_name in solicitudes:
+    while solicitudes:
+        solicitud = solicitudes.popleft()
+        types = ['Ferroviaria', 'Automotor', 'Aerea', 'Fluvial', 'Maritima']
+        letra_index = 0  # índice global para letras
+        for type in types:
+            id_carga, peso, origen_name, destino_name = solicitud
             origen = Nodo.nodos_registrados[origen_name]
             destino = Nodo.nodos_registrados[destino_name]
             rutas = buscar_rutas(origen, destino, type)

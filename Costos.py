@@ -43,7 +43,7 @@ def calculadora_de_costos(tipo, cantidad_vehiculos, ruta, carga_por_vehiculo):
 
         # 2. Definir costo fijo según tipo y tasa_de_uso
         if tipo in ["Fluvial", "Maritima"]:
-            tasa = getattr(conexion, "tasa_de_uso", "").lower()
+            tasa = getattr(conexion, "tasa_de_uso", "")
             if tasa == "maritimo":
                 costo_fijo = Barco().costo_maritimo
             elif tasa == "fluvial":
