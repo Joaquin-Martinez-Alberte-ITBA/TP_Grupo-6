@@ -70,26 +70,14 @@ def procesar_tramos():
                 else:
                     letra = f"({letra_index})"
                 letra_index += 1
-
-                cantidad_vehiculos = cantidad_de_vehiculos(ruta, type, peso)
+                carga_por_vehiculo = cantidad_de_vehiculos(ruta, type, peso)
+                cantidad_vehiculos = len(carga_por_vehiculo)
                 tiempo_total = calcular_tiempo(ruta, type)
-                costo = calculadora_de_costos(type, distancia, peso, cantidad_vehiculos, ruta)
-
+                costo = calculadora_de_costos(type,cantidad_vehiculos, ruta,carga_por_vehiculo)
                 tramos_guardados[id_carga][type].append({
                     "letra": letra,
                     "ruta": [nodo.nombre_ciudad for nodo in ruta],
-                    "distancia_total": distancia,
                     "tiempo_total": tiempo_total,
-                    "peso": peso,
-                    "cantidad_vehiculos": cantidad_vehiculos,
                     "costo": costo,
                 })
 
-                print(
-                    f"{letra} - {type}: "
-                    + " -> ".join(nodo.nombre_ciudad for nodo in ruta)
-                    + f" | {math.ceil(distancia)} km"
-                    + f" | {math.ceil(tiempo_total)} min"
-                    + f" | {cantidad_vehiculos} vehículos necesarios"
-                    + f" | Costo: {math.ceil(costo)} $"
-                )

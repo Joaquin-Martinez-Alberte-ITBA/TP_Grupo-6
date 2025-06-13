@@ -6,11 +6,11 @@ import math
 def cantidad_de_vehiculos(ruta: list[Nodo], tipo: str, peso:float):
     cantidad=0
     if tipo=='Aerea':
-        capacidad=Avion().capacidad_kg
+        capacidad_final=Avion().capacidad_kg
     elif tipo=='Maritimo' or tipo=='Fluvial':
-        capacidad=Barco().capacidad_kg
+        capacidad_final=Barco().capacidad_kg
     elif tipo=='Ferroviaria':
-        capacidad=Tren().capacidad_kg
+        capacidad_final=Tren().capacidad_kg
     elif tipo=='Automotor':
         capacidad=Camion().capacidad_kg
         for i in range(len(ruta) - 1):
@@ -21,7 +21,13 @@ def cantidad_de_vehiculos(ruta: list[Nodo], tipo: str, peso:float):
                 capacidad_final = capacidad
             else:
                 capacidad_final=min(capacidad, carga_maxima)
-        cantidad=math.ceil(peso / capacidad_final)
-        return cantidad
-    cantidad=math.ceil(peso / capacidad) 
-    return cantidad
+    numero_vehiculos = (peso / capacidad_final)
+    carga_por_vehiculo =[]
+    while numero_vehiculos > 0:
+        if numero_vehiculos >=1:
+            carga_por_vehiculo.append(capacidad_final)
+            numero_vehiculos -= 1
+        else:
+            carga_por_vehiculo.append(capacidad_final * numero_vehiculos)
+            numero_vehiculos -= 1
+    return carga_por_vehiculo
