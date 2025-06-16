@@ -1,3 +1,4 @@
+'''En vehiculos hicimos una clase general para instanciar y despues sub clases para cada tipo de vehiculo con valores fijos para cada atributo y vairables de clase para el atributo que depende del tramo'''
 class Vehiculo:
     def __init__(self,modo:str,velocidad_kmh:float,capacidad_kg:float,costo_fijo:float,costo_por_km:float,costo_por_kg:float):
             self.modo=modo
