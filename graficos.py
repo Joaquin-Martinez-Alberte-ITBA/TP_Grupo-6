@@ -14,7 +14,7 @@ def _calcular_distancia(ruta_ciudades: list[str]) -> float:
     return distancia
 
 def graficar_itinerario_por_carga(carga_dict: dict, id_carga: str):
-    '''Genera gráficos de distancia vs tiempo y costo vs distancia para una carga específica.'''
+    '''Genera graficos de distancia vs tiempo y costo vs distancia para una carga especifica.'''
     distancias = []
     tiempos = []
     costos = []
@@ -24,6 +24,10 @@ def graficar_itinerario_por_carga(carga_dict: dict, id_carga: str):
             distancias.append(_calcular_distancia(tramo["ruta"]))
             tiempos.append(tramo["tiempo_total"])
             costos.append(tramo["costo"])
+
+    if not distancias or not tiempos or not costos:
+        print(f"No hay datos para graficar la carga {id_carga}")
+        return
 
     dist_acum = np.cumsum(distancias)
     time_acum = np.cumsum(tiempos)
@@ -43,5 +47,6 @@ def graficar_itinerario_por_carga(carga_dict: dict, id_carga: str):
 
     plt.tight_layout()
     plt.show()
+
 
 

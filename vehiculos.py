@@ -8,7 +8,6 @@ class Vehiculo:
             self.costo_por_kg=costo_por_kg
     def __str__(self):
         return f"Modo: {self.modo}, Velocidad: {self.velocidad_kmh} km/h, Capacidad: {self.capacidad_kg} kg, Costo Fijo: ${self.costo_fijo}, Costo por km: ${self.costo_por_km}, Costo por kg: ${self.costo_por_kg}"
-
 class Camion(Vehiculo):
     costo_kg_liviano=1
     costo_kg_pesado=2
