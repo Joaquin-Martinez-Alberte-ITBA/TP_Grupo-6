@@ -54,7 +54,7 @@ def procesar_tramos():
     while solicitudes:
         solicitud = solicitudes.popleft()
         types = ['Ferroviaria', 'Automotor', 'Aerea', 'Fluvial', 'Maritima']
-        letra_index = 0  # índice global para letras
+        letra_index = 0  # indice global para letras
         for type in types:
             id_carga, peso, origen_name, destino_name = solicitud
             origen = Nodo.nodos_registrados[origen_name]
