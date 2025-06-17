@@ -106,10 +106,8 @@ def crear_conexiones_desde_csv(archivo_csv: str, nodos: dict[str, Nodo]):
 
                 if not nombre_origen or not nombre_destino:
                     raise ValueError("Nombre de nodo origen/destino vacio")
-
                 origen = nodos.get(nombre_origen)
                 destino = nodos.get(nombre_destino)
-
                 if not origen or not destino:
                     raise ValueError(f"Nodo no encontrado: {nombre_origen} o {nombre_destino}")
 

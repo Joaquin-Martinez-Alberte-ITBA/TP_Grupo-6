@@ -1,4 +1,5 @@
 import csv
+from nodo import Nodo
 from collections import deque
 
 def leer_solicitudes_csv() -> deque:
@@ -48,7 +49,10 @@ def leer_solicitudes_csv() -> deque:
                     destino = row[3].strip()
                     if not origen or not destino:
                         raise ValueError('Origen o destino vacio')
-
+                    # Validar que origen y destino sean nodos registrados
+                    if origen not in Nodo.nodos_registrados or destino not in Nodo.nodos_registrados:
+                        raise ValueError(f'Origen o destino no registrado: {origen}, {destino}')
+                    
                     cola.append([id_carga, peso, origen, destino])
 
                 except ValueError as ve:
