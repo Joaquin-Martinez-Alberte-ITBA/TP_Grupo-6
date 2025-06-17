@@ -18,7 +18,7 @@ class Conexion:
 
     def __init__(self, origen: Nodo, destino: Nodo, tipo: str, distancia: float):
         Conexion.verificar_conexion(origen, destino)
-
+        continuar = True
         if not isinstance(distancia, (int, float)) or distancia <= 0:
             raise ValueError("La distancia debe ser un numero positivo")
         if origen not in Conexion.conexiones_registradas:
@@ -26,12 +26,14 @@ class Conexion:
         if destino not in Conexion.conexiones_registradas[origen]:
             Conexion.conexiones_registradas[origen][destino] = {}
         if tipo in Conexion.conexiones_registradas[origen][destino]:
-            raise ValueError(f"Ya existe una conexion {tipo} entre {origen} y {destino}")
+            continuar = False
         self.origen = origen
         self.destino = destino
         self.tipo = tipo
         self.distancia = distancia
-        Conexion.conexiones_registradas[self.origen][self.destino][self.tipo] = self
+        if continuar:
+            Conexion.conexiones_registradas[self.origen][self.destino][self.tipo] = self
+            
 
     @staticmethod
     def verificar_conexion(origen, destino):

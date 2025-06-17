@@ -68,4 +68,8 @@ def main():
 
     app.mainloop()
 
-main()
+try:
+    if __name__ == "__main__":
+        main()
+except Exception as e:
+    print(f"Error en la ejecucion del programa: {e}")

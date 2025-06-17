@@ -15,12 +15,13 @@ class Nodo():
 
         if not nombre_ciudad:
             raise ValueError("El nombre de la ciudad no puede estar vacio.")
-
-        if nombre_ciudad in Nodo.nodos_registrados:
-            raise ValueError(f"El nodo '{nombre_ciudad}' ya esta registrado.")
-
+        
         self.nombre_ciudad = nombre_ciudad
-        Nodo.nodos_registrados[nombre_ciudad] = self
+
+        if nombre_ciudad not in Nodo.nodos_registrados:
+            Nodo.nodos_registrados[nombre_ciudad] = self
+
+
 
     def __str__(self):
         return f"Ciudad: {self.nombre_ciudad}"
