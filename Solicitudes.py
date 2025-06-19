@@ -49,6 +49,8 @@ def leer_solicitudes_csv() -> deque:
                     destino = row[3].strip()
                     if not origen or not destino:
                         raise ValueError('Origen o destino vacio')
+                    if origen == destino:
+                        raise ValueError('Origen y destino no pueden ser iguales')
                     # Validar que origen y destino sean nodos registrados
                     if origen not in Nodo.nodos_registrados or destino not in Nodo.nodos_registrados:
                         raise ValueError(f'Origen o destino no registrado: {origen}, {destino}')

@@ -94,49 +94,59 @@ def crear_conexiones_desde_csv(archivo_csv: str, nodos: dict[str, Nodo]):
 
             for row in reader:
                 if not row or len(row) < 6:
-                    raise ValueError("Fila del CSV incompleta o mal formada")
+                    print(f"Fila del CSV incompleta o mal formada : {row}")
+                    continue
                 
                 nombre_origen, nombre_destino, tipo, distancia_str, _, valor_extra_str = row
                 for campo in [nombre_origen, nombre_destino, tipo]:
                     if not isinstance(campo, str):
-                        raise ValueError(f"El campo {campo} debe ser un string.")
+                        print(f"El campo {campo} debe ser un string.")
+                        continue
                 tipo = tipo.strip().lower()
                 nombre_origen = nombre_origen.strip()
                 nombre_destino = nombre_destino.strip()
 
                 if not nombre_origen or not nombre_destino:
-                    raise ValueError("Nombre de nodo origen/destino vacio")
+                    print("Nombre de nodo origen/destino vacio")
+                    continue
                 origen = nodos.get(nombre_origen)
                 destino = nodos.get(nombre_destino)
                 if not origen or not destino:
-                    raise ValueError(f"Nodo no encontrado: {nombre_origen} o {nombre_destino}")
-
+                    print(f"Nodo no encontrado: {nombre_origen} o {nombre_destino}")
+                    continue
                 try:
                     distancia = float(distancia_str)
                 except:
-                    raise ValueError(f"Distancia invalida: {distancia_str}")
+                    print(f"Distancia invalida: {distancia_str}")
+                    continue
 
                 if distancia <= 0:
-                    raise ValueError("La distancia debe ser mayor a 0 km")
+                    print("La distancia debe ser mayor a 0 km")
+                    continue
 
                 if tipo == "ferroviaria":
                     velocidad_maxima = int(valor_extra_str) if valor_extra_str else 0
                     Conexion_Tipo_Ferroviaria(origen, destino, 'Ferroviaria', distancia, velocidad_maxima)
+                    Conexion_Tipo_Ferroviaria( destino,origen, 'Ferroviaria', distancia, velocidad_maxima)
 
                 elif tipo == "automotor":
                     carga_maxima = int(valor_extra_str) if valor_extra_str else 0
                     Conexion_Tipo_Automotor(origen, destino, 'Automotor', distancia, carga_maxima)
+                    Conexion_Tipo_Automotor(destino, origen, 'Automotor', distancia, carga_maxima)
 
                 elif tipo in {"fluvial", "maritima"}:
                     tasa_de_uso = valor_extra_str or "N/A" 
                     Conexion_Tipo_Naval(origen, destino, tipo.title(), distancia, tasa_de_uso)
+                    Conexion_Tipo_Naval(destino, origen, tipo.title(), distancia, tasa_de_uso)
 
                 elif tipo == "aerea":
                     probabilidad = float(valor_extra_str) if valor_extra_str else 0
                     Conexion_Tipo_Aerea(origen, destino, 'Aerea', distancia, probabilidad)
+                    Conexion_Tipo_Aerea(destino, origen, 'Aerea', distancia, probabilidad)
 
                 else:
                     raise ValueError(f"Tipo de conexion desconocido: {tipo}")
+                    continue
     except FileNotFoundError:
         raise FileNotFoundError(f"El archivo {archivo_csv} no existe.")
     except Exception as e:
