@@ -39,6 +39,8 @@ a cada medio. El sistema también evita ciclos en los caminos y valida que los d
 - `itinerario.py`: representa un itinerario completo con todos sus tramos.
 - `kpi.py`: se encarga de calcular el itinerario óptimo.
 - `graficos.py`: genera gráficos para visualizar los KPIs.
+- `capacidad.py`: se encarga de calcular la carga llevada por cada vehiculo.
+- `costos.py`: se encarga de calcular los costos de cada recorrido.
 
 ## Cómo ejecutar
 
