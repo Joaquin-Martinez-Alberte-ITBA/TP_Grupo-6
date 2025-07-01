@@ -1,4 +1,3 @@
-# kpi.py
 import time
 
 def convertir_a_hhmmss(minutos):

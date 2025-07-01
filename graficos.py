@@ -21,9 +21,9 @@ def graficar_itinerario_por_carga(carga_dict: dict, id_carga: str):
 
     for tramos in carga_dict.values():
         for tramo in tramos:
-            distancias.append(_calcular_distancia(tramo["ruta"]))
-            tiempos.append(tramo["tiempo_total"])
-            costos.append(tramo["costo"])
+            distancias.append(_calcular_distancia(tramo.ruta))
+            tiempos.append(tramo.tiempo_total)
+            costos.append(tramo.costo)
 
     if not distancias or not tiempos or not costos:
         print(f"No hay datos para graficar la carga {id_carga}")

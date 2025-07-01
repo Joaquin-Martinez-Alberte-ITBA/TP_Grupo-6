@@ -67,7 +67,7 @@ class Conexion_Tipo_Naval(Conexion):
     """Conexion naval con tasa de uso."""
     def __init__(self, origen: Nodo, destino: Nodo, tipo:str, distancia: float, tasa_de_uso:str):
         super().__init__(origen, destino, tipo.title(), distancia)
-        self.tasa_de_uso = tasa_de_uso  # validar segun como lo uses luego
+        self.tasa_de_uso = tasa_de_uso 
 
 class Conexion_Tipo_Aerea(Conexion):
     """Conexion aerea con probabilidad de mal clima."""

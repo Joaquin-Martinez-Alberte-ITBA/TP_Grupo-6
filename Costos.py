@@ -30,7 +30,6 @@ def calculadora_de_costos(tipo, cantidad_vehiculos, ruta, carga_por_vehiculo):
         "Maritima": Barco().costo_maritimo
     }
 
-    # --- Calculo del CostoTramo total ---
     '''
        - Se recorre la ruta tramo por tramo (origen --> destino).
         - Se obtiene la conexion correspondiente desde el diccionario conexiones_registradas.
@@ -49,7 +48,6 @@ def calculadora_de_costos(tipo, cantidad_vehiculos, ruta, carga_por_vehiculo):
         conexion = Conexion.conexiones_registradas[origen][destino][tipo]
         distancia_km = conexion.distancia
 
-        # 1. Definir costo por km
 
         if tipo == "Ferroviaria":
             if distancia_km >= 200:
@@ -59,7 +57,6 @@ def calculadora_de_costos(tipo, cantidad_vehiculos, ruta, carga_por_vehiculo):
         else:
             costo_km = costos_por_km[tipo]
 
-        # 2. Definir costo fijo segun tipo y tasa_de_uso
         if tipo in ["Fluvial", "Maritima"]:
             '''
             En caso de transporte fluvial o maritimo, el costo fijo se ajusta
@@ -78,7 +75,6 @@ def calculadora_de_costos(tipo, cantidad_vehiculos, ruta, carga_por_vehiculo):
         costo_tramo = (costo_fijo + costo_km * distancia_km) * cantidad_vehiculos
         costo_total_tramos += costo_tramo
 
-    # --- Calculo del CostoVehiculo total ---
     '''
     - Para cada carga asignada a un vehiculo, se multiplica por su costo por kg.
     - Para camiones, el costo depende de si la carga es liviana (<15000 kg) o pesada (>=15000 kg)
@@ -95,7 +91,6 @@ def calculadora_de_costos(tipo, cantidad_vehiculos, ruta, carga_por_vehiculo):
 
         costo_total_vehiculos += carga * costo_por_kg
 
-    # --- Costo total del itinerario ---
     costo_itinerario = costo_total_tramos + costo_total_vehiculos
     return costo_itinerario
 
