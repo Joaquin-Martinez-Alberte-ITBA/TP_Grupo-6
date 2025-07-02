@@ -6,6 +6,10 @@ from vehiculos import Camion, Tren, Avion, Barco, Vehiculo
 from capacidad import cantidad_de_vehiculos
 
 class Tramo:
+    """
+    Representa un tramo individual dentro de una solicitud de carga.
+    Contiene: ruta, tiempo total estimado, costo y modo de transporte.
+    """
     def __init__(self, id_tramo, ruta, tiempo_total, costo, modo):
         self.id = id_tramo
         self.ruta = ruta
@@ -20,7 +24,17 @@ class Tramo:
         )
 
 class Planificador:
-    conteo_de_conexiones = {}  # Variable de clase
+    """
+    Gestiona la planificacion de rutas para una solicitud especifica.
+    Cada instancia representa una solicitud independiente.
+    """
+    conteo_de_conexiones = {}
+    conteo_vehiculos_por_tipo = {
+        "Aerea": 0,
+        "Barcos": 0,
+        "Ferroviaria": 0,
+        "Automotor": 0
+    }
 
     VELOCIDAD_POR_TIPO = {
         "Ferroviaria": Tren().velocidad_kmh,
@@ -91,9 +105,18 @@ class Planificador:
                 self.tramos_por_tipo[tipo].append(tramo)
                 id_counter += 1
 
+                # Contar conexiones
                 for a, b in zip(ruta, ruta[1:]):
                     clave = (a.nombre_ciudad, b.nombre_ciudad, tipo)
                     Planificador.conteo_de_conexiones[clave] = Planificador.conteo_de_conexiones.get(clave, 0) + 1
+
+                # Acumular vehiculos usados
+                tipo_acumulado = tipo
+                if tipo in ["Maritima", "Fluvial"]:
+                    tipo_acumulado = "Barcos"
+                if tipo_acumulado in Planificador.conteo_vehiculos_por_tipo:
+                    Planificador.conteo_vehiculos_por_tipo[tipo_acumulado] += cantidad_vehiculos
+
 
     def obtener_kpi(self):
         mejor_costo = None

@@ -1,3 +1,6 @@
 id_carga,peso_kg,origen,destino
 CARGA_001,70000,Zarate,Mar_del_Plata
 CARGA_002,50000,Junin,Azul
+CARGA_003,20000,Mar_del_Plata,Junin
+CARGA_004,30000,Buenos_Aires,Azul
+CARGA_005,200000,Zarate,Buenos_Aires

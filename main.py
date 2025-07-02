@@ -1,17 +1,17 @@
 import tkinter as tk
-from tkinter import messagebox, filedialog
+from tkinter import messagebox
 from nodo import Nodo, cargar_nodos_desde_csv
 from conexion import crear_conexiones_desde_csv, Conexion
 from tramo import procesar_todas_las_solicitudes, Planificador
-from graficos import graficar_itinerario_por_carga, plt
+from graficos import graficar_itinerario_por_carga, graficar_trafico_red, graficar_vehiculos_usados, plt
 
 class App:
     def __init__(self):
         self.root = tk.Tk()
-        self.root.title("Gestión de Envíos")
+        self.root.title("Gestion de Envios")
         self.indice_actual = 0
         self.planificadores = []
-        self.figura_actual = None 
+        self.figura_actual = None
 
         self.configurar_interfaz()
         self.bloquear_botones(inicial=True)
@@ -20,7 +20,7 @@ class App:
         frame = tk.Frame(self.root, padx=20, pady=20)
         frame.pack()
 
-        tk.Label(frame, text="Sistema de Envíos de Cargas", font=("Arial", 16)).pack(pady=10)
+        tk.Label(frame, text="Sistema de Envios de Cargas", font=("Arial", 16)).pack(pady=10)
 
         self.btn_cargar = tk.Button(frame, text="Cargar datos", command=self.cargar_datos, width=30)
         self.btn_cargar.pack(pady=5)
@@ -31,8 +31,11 @@ class App:
         self.btn_siguiente = tk.Button(frame, text="Siguiente solicitud", command=self.mostrar_siguiente, width=30)
         self.btn_siguiente.pack(pady=5)
 
-        self.btn_guardar = tk.Button(frame, text="Guardar gráfico actual", command=self.guardar_grafico, width=30)
-        self.btn_guardar.pack(pady=5)
+        self.btn_trafico = tk.Button(frame, text="Ver trafico de la red", command=graficar_trafico_red, width=30)
+        self.btn_trafico.pack(pady=5)
+
+        self.btn_vehiculos = tk.Button(frame, text="Ver vehiculos utilizados", command=graficar_vehiculos_usados, width=30)
+        self.btn_vehiculos.pack(pady=5)
 
         self.output_text = tk.Text(self.root, height=20, width=80)
         self.output_text.pack(padx=20, pady=10)
@@ -42,7 +45,8 @@ class App:
     def bloquear_botones(self, inicial=False):
         self.btn_procesar.config(state="disabled" if inicial else "normal")
         self.btn_siguiente.config(state="disabled")
-        self.btn_guardar.config(state="disabled")
+        self.btn_trafico.config(state="disabled")
+        self.btn_vehiculos.config(state="disabled")
 
     def cargar_datos(self):
         try:
@@ -63,7 +67,7 @@ class App:
         self.indice_actual = 0
 
         if not self.planificadores:
-            messagebox.showinfo("Sin solicitudes", "No hay solicitudes válidas para procesar.")
+            messagebox.showinfo("Sin solicitudes", "No hay solicitudes validas para procesar.")
             self.bloquear_botones(inicial=True)
             return
 
@@ -74,7 +78,10 @@ class App:
         if self.indice_actual >= len(self.planificadores):
             messagebox.showinfo("Fin", "Ya se mostraron todas las solicitudes.")
             self.btn_siguiente.config(state="disabled")
+            self.btn_trafico.config(state="normal")
+            self.btn_vehiculos.config(state="normal")
             return
+
         if self.figura_actual:
             plt.close(self.figura_actual)
             self.figura_actual = None
@@ -88,16 +95,8 @@ class App:
 
         if planificador.tramos_por_tipo:
             self.figura_actual = graficar_itinerario_por_carga(planificador.tramos_por_tipo, planificador.id_carga)
-            self.btn_guardar.config(state="normal")
 
         self.indice_actual += 1
-
-    def guardar_grafico(self):
-        if self.figura_actual:
-            archivo = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG files", "*.png")])
-            if archivo:
-                self.figura_actual.savefig(archivo)
-                messagebox.showinfo("Guardado", f"Gráfico guardado en:\n{archivo}")
 
     def cerrar_app(self):
         if self.figura_actual:
@@ -112,4 +111,4 @@ if __name__ == "__main__":
         app = App()
         app.ejecutar()
     except Exception as e:
-        print(f"Error en la ejecución del programa: {e}")
+        print(f"Error en la ejecucion del programa: {e}")

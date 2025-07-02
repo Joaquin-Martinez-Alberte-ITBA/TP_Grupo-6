@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from nodo import Nodo
 from conexion import Conexion
+from tramo import Planificador  # Para acceder a los conteos
 
 def _calcular_distancia(ruta_ciudades: list[str]) -> float:
     '''Calcula la distancia total de una ruta dada por una lista de ciudades.'''
@@ -33,20 +34,57 @@ def graficar_itinerario_por_carga(carga_dict: dict, id_carga: str):
     time_acum = np.cumsum(tiempos)
     cost_acum = np.cumsum(costos)
 
-    plt.figure()
+    fig1 = plt.figure()
     plt.plot(time_acum, dist_acum, marker="o")
     plt.xlabel("Tiempo acumulado (min)")
     plt.ylabel("Distancia acumulada (km)")
     plt.title(f"Distancia vs Tiempo - {id_carga}")
 
-    plt.figure()
-    plt.plot(dist_acum, cost_acum, marker="o", color="red")
+    fig2 = plt.figure()
+    plt.plot(dist_acum, cost_acum, marker="o", color="blue")
     plt.xlabel("Distancia acumulada (km)")
     plt.ylabel("Costo acumulado ($)")
     plt.title(f"Costo vs Distancia - {id_carga}")
 
     plt.tight_layout()
     plt.show()
+    return fig2  # Para que el main cierre la ventana si hace falta
 
+def graficar_trafico_red():
+    '''Grafica un mapa de calor de la red segun la cantidad de veces que se uso cada conexion.'''
+    conteo = Planificador.conteo_de_conexiones
+    if not conteo:
+        print("No hay trafico registrado para graficar.")
+        return
 
+    etiquetas = []
+    valores = []
 
+    for (origen, destino, tipo), uso in conteo.items():
+        etiquetas.append(f"{origen} -> {destino} ({tipo})")
+        valores.append(uso)
+
+    plt.figure(figsize=(12, 6))
+    plt.barh(etiquetas, valores, color="indianred")
+    plt.xlabel("Cantidad de veces utilizada")
+    plt.title("Trafico de la red por conexion y tipo de transporte")
+    plt.tight_layout()
+    plt.show()
+
+def graficar_vehiculos_usados():
+    '''Grafica una barra vertical con la cantidad total de vehiculos usados por tipo.'''
+    conteo = Planificador.conteo_vehiculos_por_tipo
+    if not conteo or sum(conteo.values()) == 0:
+        print("No hay vehiculos registrados para graficar.")
+        return
+
+    tipos = list(conteo.keys())
+    cantidades = list(conteo.values())
+
+    plt.figure(figsize=(8, 5))
+    plt.bar(tipos, cantidades, color="steelblue")
+    plt.xlabel("Tipo de vehiculo")
+    plt.ylabel("Cantidad total de vehiculos utilizados")
+    plt.title("Vehiculos utilizados por tipo en todas las solicitudes")
+    plt.tight_layout()
+    plt.show()
