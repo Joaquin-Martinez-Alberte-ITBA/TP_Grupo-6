@@ -105,12 +105,10 @@ class Planificador:
                 self.tramos_por_tipo[tipo].append(tramo)
                 id_counter += 1
 
-                # Contar conexiones
                 for a, b in zip(ruta, ruta[1:]):
                     clave = (a.nombre_ciudad, b.nombre_ciudad, tipo)
                     Planificador.conteo_de_conexiones[clave] = Planificador.conteo_de_conexiones.get(clave, 0) + 1
 
-                # Acumular vehiculos usados
                 tipo_acumulado = tipo
                 if tipo in ["Maritima", "Fluvial"]:
                     tipo_acumulado = "Barcos"

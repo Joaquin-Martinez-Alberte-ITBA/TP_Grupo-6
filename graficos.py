@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from nodo import Nodo
 from conexion import Conexion
-from tramo import Planificador  # Para acceder a los conteos
+from tramo import Planificador
 
 def _calcular_distancia(ruta_ciudades: list[str]) -> float:
     '''Calcula la distancia total de una ruta dada por una lista de ciudades.'''
@@ -48,7 +48,7 @@ def graficar_itinerario_por_carga(carga_dict: dict, id_carga: str):
 
     plt.tight_layout()
     plt.show()
-    return fig2  # Para que el main cierre la ventana si hace falta
+    return fig2
 
 def graficar_trafico_red():
     '''Grafica un mapa de calor de la red segun la cantidad de veces que se uso cada conexion.'''

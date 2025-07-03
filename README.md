@@ -62,13 +62,12 @@ No es necesario instalar librerías externas, todas son parte de la biblioteca e
 
 Durante el desarrollo enfrentamos algunos desafíos importantes:
 
-- Al principio no estábamos seguros de cómo modelar correctamente la clase `Conexion` ni dónde almacenar la información de
-  los modos de transporte. Finalmente, optamos por centralizar todo en la clase `Conexion`, lo que facilitó la búsqueda de caminos
-  posibles a través de un diccionario de conexiones.
-- Tuvimos confusiones con la definición de “tramo” que proponía la cátedra. Al principio lo entendíamos como una conexión
-  directa, pero luego comprendimos que debíamos considerar un tramo como cada uso del vehículo en una conexión individual,
-  y calcular los costos en función de eso.
+- Al principio no estábamos seguros de cómo modelar correctamente la clase `Conexion` ni dónde almacenar la información de los modos de transporte. Finalmente, optamos por centralizar todo en la clase `Conexion`, lo que facilitó la búsqueda de caminos posibles a través de un diccionario de conexiones.
+- Tuvimos confusiones con la definición de “tramo” que proponía la cátedra. Al principio lo entendíamos como una conexión directa, pero luego comprendimos que debíamos considerar un tramo como cada uso del vehículo en una conexión individual, y calcular los costos en función de eso.
 - Encontramos dificultades al calcular el costo para conexiones fluviales, especialmente para detectar correctamente si un tramo era marítimo o fluvial.
+- A la hora de generar la lógica no tuvimos tantas dudas pero el mayor desafío fue encontrar una estructura de datos válida para almacenar cada una de ellas. En este caso optamos por un diccionario el cual nos iba a permitir organizar todos los trayectos de una solicitud por una key y luego llamarlos más tarde para mostrárselo al usuario.
+- Al calcular los costos se nos presentó el desafío de que cada uno de los vehículos tienen costos distintos que dependen de distintas cosas y nos costó mucho unificar la forma de calcular todos.
+-  Relacionado con el cálculo de costos porque lo debíamos usar para encontrar los costos. Nosotros consideramos esto un desafío importante porque las cargas no solo dependen de los vehículos sino que también de las conexiones y tenía que integrar ambas cosas para poder llegar al resultado deseado. Finalmente pudimos desarrollar una función que cumplía con todos los requisitos.
 
 Aclaraciones:
 
@@ -89,4 +88,47 @@ Trabajo práctico realizado para la materia 71.45-Estructura de Datos (2025)
 - Tomas Raele D'Amico
 - Guido Levit
 - Joaquin Martinez Alberte
+
+## Cambios Realizados
+
+Agregamos Clases:
+
+  Consideramos que agregar nuevas clases era una modificación necesaria para respetar mejor los principios de la Programación Orientada a Objetos.  
+  La incorporación de clases como `Tramo` fue clave para mejorar la abstracción de nuestro sistema, ya que nos permite representar adecuadamente las características compartidas de los tramos.
+
+  Además, la clase `Planificador` mejoró el encapsulamiento y la modularidad del programa:
+  - Encapsulamiento: unifica funciones y métodos clave para procesar solicitudes y generar KPI.
+  - Modularidad: divide el código en métodos más simples y comprensibles, facilitando el mantenimiento y la evolución del sistema.
+
+Reorganización de Funciones Clave:
+
+  Reubicamos algunas funciones que antes estaban en módulos sueltos, ubicándolas ahora en las clases correspondientes:
+
+  - Los cálculos de costos fueron incorporados en la clase `Vehiculo`.
+  - Los KPI fueron integrados directamente en la clase `Planificador`.
+
+  Esto mejora el encapsulamiento, manteniendo cada comportamiento dentro de su clase responsable.
+
+Cambios Adicionales
+
+  También realizamos algunos ajustes menores pero importantes:
+
+  - Validación mejorada: ahora no se permite que haya dos solicitudes con el mismo ID.
+  - Restricción de botones: deshabilitamos botones que requerían información previa o no eran necesarios desde el inicio.
+  - Se muestran todas las rutas posibles para cada solicitud, incluyendo todos los tramos.
+  - Eliminamos números mágicos: ahora cada tramo tiene un ID numérico asignado.
+  - Agregamos el diagrama de clases que se muestra más arriba.
+  - Incorporamos lo solicitado: un nuevo KPI y gráficos históricos que permiten un análisis visual del desempeño del sistema.
+
+## Implementaciones Finales
+
+KPI Tráfico:
+  Nuevo KPI que calcula la ruta con menos tránsito.
+
+Gráficos Históricos:
+  Se generan dos nuevos gráficos en base a los datos de todas las solicitudes procesadas:
+  - Un gráfico de barras que muestra la cantidad de veces que se utilizó cada conexión.
+  - Un gráfico de barras que muestra la cantidad total de vehículos utilizados por tipo.
+
+
 
